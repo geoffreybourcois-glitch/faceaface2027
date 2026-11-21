@@ -72,7 +72,10 @@
   .coche.grisee:hover .infobulle{opacity:1}
 
   /* Barre de sélection */
-  .barre{position:sticky;bottom:16px;margin-top:32px;padding:16px 20px;background:#fff;border:1px solid #d4d1ea;border-radius:14px;box-shadow:0 12px 32px rgba(27,29,77,.14);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .barre{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;border-top:3px solid #6d28d9;box-shadow:0 -8px 24px rgba(27,29,77,.14);transform:translateY(110%);transition:transform .25s ease}
+  .barre.visible{transform:translateY(0)}
+  .barre-contenu{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  body.avec-barre{padding-bottom:96px}
   .barre .compte{font-size:14px;font-weight:700;color:#1b1d4d}
   .barre .noms{font-size:14px;color:#5b5a72}
   .boutons{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -82,7 +85,8 @@
 
   @media (max-width:760px){
     .entete{height:auto;padding:12px 0}
-    .barre{bottom:8px;padding:10px 14px;gap:8px}
+    .barre-contenu{padding:10px 14px;gap:8px}
+    body.avec-barre{padding-bottom:110px}
     .barre .noms{font-size:13px}
     .comparer{display:none}
     .message-bientot{font-size:12px}
@@ -133,19 +137,22 @@
     <div class="grille" id="grille"></div>
     <p class="note">Liste mise à jour au fil de la campagne. Le classement gauche-droite est indicatif.</p>
 
-    <div class="barre" role="status" aria-live="polite">
-      <div>
-        <div class="compte" id="compte">Sélection : 0 / 2</div>
-        <div class="noms" id="noms">Aucun candidat sélectionné</div>
-      </div>
-      <div class="boutons">
-        <button type="button" class="effacer" id="effacer">Effacer</button>
-        <button type="button" class="comparer" disabled>Comparer les programmes</button>
-        <span class="message-bientot">Le comparateur arrive bientôt</span>
-      </div>
-    </div>
   </div>
 </main>
+
+<div class="barre" id="barre" role="status" aria-live="polite">
+  <div class="barre-contenu">
+    <div>
+      <div class="compte" id="compte">Sélection : 0 / 2</div>
+      <div class="noms" id="noms">Aucun candidat sélectionné</div>
+    </div>
+    <div class="boutons">
+      <button type="button" class="effacer" id="effacer">Effacer</button>
+      <button type="button" class="comparer" disabled>Comparer les programmes</button>
+      <span class="message-bientot">Le comparateur arrive bientôt</span>
+    </div>
+  </div>
+</div>
 
 <footer>
   <div class="conteneur">
@@ -243,6 +250,9 @@ function miseAJour() {
     caseC.closest('.coche').classList.toggle('grisee', bloque);
     caseC.closest('.carte').classList.toggle('choisie', choisi);
   });
+  const visible = selection.length > 0;
+  document.getElementById('barre').classList.toggle('visible', visible);
+  document.body.classList.toggle('avec-barre', visible);
   document.getElementById('compte').textContent = 'Sélection : ' + selection.length + ' / 2';
   document.getElementById('noms').textContent = selection.length
     ? selection.map((i) => candidats[i].nom).join(' et ')
