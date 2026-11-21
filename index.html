@@ -80,7 +80,9 @@
   .barre .noms{font-size:14px;color:#5b5a72}
   .boutons{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .effacer{min-height:44px;padding:0 18px;border:1px solid #d4d1ea;border-radius:10px;background:#fff;color:#1b1d4d;font-family:inherit;font-size:15px;cursor:pointer}
-  .comparer{min-height:44px;padding:0 22px;border:none;border-radius:10px;background:#ecebf7;color:#6f6e86;font-family:inherit;font-size:15px;font-weight:600;cursor:not-allowed}
+  .comparer{min-height:44px;padding:0 22px;display:inline-flex;align-items:center;border-radius:10px;background:#ecebf7;color:#6f6e86;font-size:15px;font-weight:600;text-decoration:none;cursor:not-allowed;pointer-events:none}
+  .comparer.pret{background:#6d28d9;color:#fff;cursor:pointer;pointer-events:auto}
+  .comparer.pret:hover{background:#5b21b6;color:#fff}
   .message-bientot{font-size:13px;color:#5b21b6;font-weight:600}
 
   @media (max-width:760px){
@@ -88,7 +90,6 @@
     .barre-contenu{padding:10px 14px;gap:8px}
     body.avec-barre{padding-bottom:110px}
     .barre .noms{font-size:13px}
-    .comparer{display:none}
     .message-bientot{font-size:12px}
     .effacer{min-height:40px;padding:0 12px;font-size:14px}
     .infos{padding:12px 12px 6px}
@@ -148,8 +149,8 @@
     </div>
     <div class="boutons">
       <button type="button" class="effacer" id="effacer">Effacer</button>
-      <button type="button" class="comparer" disabled>Comparer les programmes</button>
-      <span class="message-bientot">Le comparateur arrive bientôt</span>
+      <a class="comparer" id="comparer" href="#" aria-disabled="true">Choisir le thème →</a>
+      <span class="message-bientot" id="aide">Cochez un deuxième candidat</span>
     </div>
   </div>
 </div>
@@ -163,46 +164,13 @@
   </div>
 </footer>
 
+<script src="donnees.js"></script>
 <script>
-const candidats = [
-  { nom: 'Juan Branco', age: 37, parti: 'Les Ruches', photo: 'branco.jpg', credit: 'Web Summit (à vérifier)',
-    bio: '37 ans\nAvocat\nCandidat soutenu par le mouvement « Les Ruches »', programme: 'https://juan-branco.fr' },
-  { nom: 'Fabien Roussel', age: 57, parti: 'PCF', photo: 'roussel.jpg', credit: 'Zouhair Nakara',
-    bio: 'Secrétaire national du PCF\nMaire de Saint-Amand-les-Eaux\nAncien député' },
-  { nom: 'Jean-Luc Mélenchon', age: 75, parti: 'La France insoumise', photo: 'melenchon.jpg', credit: 'Wikimedia Commons',
-    bio: 'Fondateur de La France insoumise', programme: 'https://melenchon2027.fr' },
-  { nom: 'François Ruffin', age: 51, parti: 'Debout !', photo: 'ruffin.jpg', credit: 'Thinkerview',
-    bio: 'Député de la Somme\nJournaliste' },
-  { nom: 'Marine Tondelier', age: 40, parti: 'Les Écologistes', photo: 'tondelier.jpg', credit: 'Selbymay',
-    bio: 'Secrétaire nationale des Écologistes\nConseillère régionale des Hauts-de-France' },
-  { nom: 'Raphaël Glucksmann', age: 47, parti: 'Place publique', photo: 'glucksmann.jpg', credit: 'Parlement européen',
-    bio: 'Député européen\nCoprésident de Place publique\nEssayiste, ancien journaliste' },
-  { nom: 'Karim Bouamrane', age: 53, parti: 'La France humaine et forte', photo: 'bouamrane.jpg', credit: 'Wikimedia Commons',
-    bio: 'Maire de Saint-Ouen-sur-Seine\nVice-président du conseil départemental de la Seine-Saint-Denis' },
-  { nom: 'Natacha Polony', age: 51, parti: 'Sans étiquette', photo: 'polony.jpg', credit: 'Georges Biard',
-    bio: 'Journaliste et essayiste\nÉditorialiste, chroniqueuse et présentatrice audiovisuelle' },
-  { nom: 'Gabriel Attal', age: 37, parti: 'Renaissance', photo: 'attal.jpg', credit: 'Ismail Aissoub',
-    bio: 'Secrétaire général de Renaissance (anciennement En Marche)\nAncien Premier ministre\nAncien porte-parole du gouvernement' },
-  { nom: 'Édouard Philippe', age: 55, parti: 'Horizons', photo: 'philippe.jpg', credit: 'Wikimedia Commons',
-    bio: 'Maire du Havre\nAncien Premier ministre\nPrésident du parti Horizons' },
-  { nom: 'David Lisnard', age: 57, parti: 'Nouvelle Énergie', photo: 'lisnard.jpg', credit: 'Grégor Sauvagère',
-    bio: 'Maire de Cannes\nPrésident de l’Association des maires de France (AMF)' },
-  { nom: 'Bruno Retailleau', age: 65, parti: 'Les Républicains', photo: 'retailleau.jpg', credit: 'Anthony Montardy',
-    bio: 'Président des Républicains\nSénateur de la Vendée\nAncien ministre de l’Intérieur' },
-  { nom: 'Nicolas Dupont-Aignan', age: 65, parti: 'Debout la France', photo: 'dupontaignan.jpg', credit: 'Source à préciser',
-    bio: 'Maire de Yerres\nPrésident de Debout la France\nAncien député' },
-  { nom: 'Marine Le Pen', age: 58, parti: 'Rassemblement national', photo: 'lepen.jpg', credit: 'Vox España',
-    bio: 'Présidente du groupe Rassemblement national à l’Assemblée nationale\nAncienne présidente du Rassemblement national' },
-  { nom: 'Éric Zemmour', age: 68, parti: 'Reconquête', photo: 'zemmour.jpg', credit: 'Anh de France',
-    bio: 'Président de Reconquête\nEssayiste\nAncien éditorialiste' }
-];
+const candidats = CANDIDATS;
 
 const grille = document.getElementById('grille');
 let selection = [];
 
-function echapper(t) {
-  return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 
 candidats.forEach((c, i) => {
   const carte = document.createElement('article');
@@ -254,6 +222,17 @@ function miseAJour() {
   document.getElementById('barre').classList.toggle('visible', visible);
   document.body.classList.toggle('avec-barre', visible);
   document.getElementById('compte').textContent = 'Sélection : ' + selection.length + ' / 2';
+  const lien = document.getElementById('comparer');
+  const pret = selection.length === 2;
+  lien.classList.toggle('pret', pret);
+  lien.setAttribute('aria-disabled', pret ? 'false' : 'true');
+  document.getElementById('aide').style.display = pret ? 'none' : '';
+  if (pret) {
+    const ordre = [...selection].sort((x, y) => x - y);
+    lien.href = 'themes.html?a=' + candidats[ordre[0]].id + '&b=' + candidats[ordre[1]].id;
+  } else {
+    lien.href = '#';
+  }
   document.getElementById('noms').textContent = selection.length
     ? selection.map((i) => candidats[i].nom).join(' et ')
     : 'Aucun candidat sélectionné';
@@ -266,6 +245,14 @@ grille.addEventListener('change', (e) => {
   else selection = selection.filter((x) => x !== i);
   miseAJour();
 });
+
+// Retour depuis la page des thèmes : on recoche les candidats
+const params = new URLSearchParams(location.search);
+['a', 'b'].forEach((cle) => {
+  const i = candidats.findIndex((c) => c.id === params.get(cle));
+  if (i !== -1 && !selection.includes(i) && selection.length < 2) selection.push(i);
+});
+miseAJour();
 
 document.getElementById('effacer').addEventListener('click', () => { selection = []; miseAJour(); });
 </script>

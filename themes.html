@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choisissez un thème — FaceàFace2027</title>
+<meta name="description" content="Choisissez un thème pour comparer les programmes de deux candidats à la présidentielle 2027.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#ebe9f8;font-family:'Inter',system-ui,sans-serif;color:#2a2a3c}
+  a{color:#5b21b6}a:hover{color:#4c1d95}
+  .titre{font-family:'Space Grotesk','Inter',sans-serif}
+  .conteneur{max-width:1200px;margin:0 auto}
+
+  header{background:#1b1d4d;padding:0 24px}
+  .entete{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff}
+  .logo .nom{font-size:21px;font-weight:700;letter-spacing:-0.01em}
+  .logo .nom span{color:#c4b5fd}
+  nav{display:flex;gap:4px;flex-wrap:wrap}
+  nav a{padding:12px 16px;border-radius:8px;text-decoration:none;font-size:15px;color:#dcdaf5}
+  nav a:hover{background:#2c2f6e;color:#fff}
+
+  .bandeau{background:linear-gradient(135deg,#1b1d4d 0%,#2e2a78 55%,#4a2f9a 100%);padding:36px 24px 40px;border-bottom:4px solid #a78bfa}
+  .bandeau .conteneur{display:flex;flex-direction:column;gap:22px}
+  .rappel{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .duo{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .surtitre{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#c4b5fd}
+  .pastille{display:flex;align-items:center;gap:10px;padding:5px 16px 5px 5px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22)}
+  .pastille img{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:center top;background:#3a3d85}
+  .pastille .n{font-size:16px;font-weight:600;color:#fff;line-height:1.2}
+  .pastille .p{font-size:12px;color:#c9c7ea}
+  .vs{font-size:15px;font-weight:700;color:#c4b5fd}
+  .changer{padding:12px 4px;font-size:15px;font-weight:600;color:#ddd6fe}
+  .changer:hover{color:#fff}
+  h1{margin:0;font-size:clamp(28px,4vw,38px);line-height:1.1;font-weight:700;letter-spacing:-0.02em;color:#fff}
+  .intro{margin:6px 0 0;font-size:17px;line-height:1.5;color:#dcdaf5}
+
+  main{padding:40px 24px 0}
+  .grille{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  @media (max-width:1000px){.grille{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media (max-width:760px){.grille{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+
+  .carte{display:flex;flex-direction:column;gap:10px;padding:20px 20px 10px;border:2px solid #e2e0ef;border-radius:14px;background:#fff;transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease}
+  .carte:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(27,29,77,.10)}
+  .carte.choisie{border-color:#6d28d9;box-shadow:0 0 0 1px #6d28d9}
+  .icone{width:42px;height:42px;border-radius:12px;background:#ecebf7;display:flex;align-items:center;justify-content:center}
+  .theme-titre{font-size:18px;font-weight:700;line-height:1.25;color:#1b1d4d}
+  .theme-desc{font-size:13px;line-height:1.45;color:#5b5a72;flex-grow:1}
+  .actions{border-top:1px solid #ecebf7;padding-top:4px;display:flex;justify-content:flex-end}
+  .coche{position:relative;display:flex;align-items:center;gap:8px;min-height:44px;font-size:13px;color:#3f3e5c;cursor:pointer}
+  .coche input{width:22px;height:22px;margin:0;accent-color:#6d28d9;cursor:pointer}
+  .coche.grisee{color:#6f6e86;cursor:not-allowed}
+  .coche.grisee input{cursor:not-allowed}
+  .infobulle{position:absolute;right:0;bottom:calc(100% + 2px);width:170px;padding:8px 10px;border-radius:8px;background:#1b1d4d;color:#fff;font-size:12px;font-weight:600;line-height:1.35;text-align:center;opacity:0;pointer-events:none;transition:opacity .15s ease}
+  .coche.grisee:hover .infobulle{opacity:1}
+
+  .erreur{max-width:640px;margin:40px auto;padding:28px;background:#fff;border:1px solid #e2e0ef;border-radius:14px;text-align:center}
+  .erreur h2{color:#1b1d4d;margin:0 0 10px}
+  .bouton{display:inline-flex;align-items:center;min-height:44px;padding:0 22px;border-radius:10px;background:#6d28d9;color:#fff;font-weight:600;text-decoration:none}
+  .bouton:hover{background:#5b21b6;color:#fff}
+
+  .barre{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;border-top:3px solid #6d28d9;box-shadow:0 -8px 24px rgba(27,29,77,.14);transform:translateY(110%);transition:transform .25s ease}
+  .barre.visible{transform:translateY(0)}
+  .barre-contenu{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .barre .compte{font-size:14px;font-weight:700;color:#1b1d4d}
+  .barre .noms{font-size:14px;color:#5b5a72}
+  .boutons{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .effacer{min-height:44px;padding:0 18px;border:1px solid #d4d1ea;border-radius:10px;background:#fff;color:#1b1d4d;font-family:inherit;font-size:15px;cursor:pointer}
+  .voir{min-height:44px;padding:0 22px;border:none;border-radius:10px;background:#ecebf7;color:#6f6e86;font-family:inherit;font-size:15px;font-weight:600;cursor:not-allowed}
+  .message-bientot{font-size:13px;color:#5b21b6;font-weight:600}
+  body.avec-barre{padding-bottom:96px}
+
+  footer{margin-top:48px;background:#1b1d4d;padding:24px}
+  footer .conteneur{display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:#dcdaf5}
+  footer a{color:#dcdaf5}
+
+  @media (max-width:760px){
+    .entete{padding:12px 0}
+    .carte{padding:14px 14px 6px}
+    .theme-titre{font-size:16px}
+    .barre-contenu{padding:10px 14px;gap:8px}
+    .voir{display:none}
+    .message-bientot{font-size:12px}
+    .effacer{min-height:40px;padding:0 12px;font-size:14px}
+    body.avec-barre{padding-bottom:110px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="conteneur entete">
+    <a class="logo" href="index.html">
+      <svg aria-hidden="true" width="40" height="28" viewBox="0 0 40 28"><circle cx="14" cy="14" r="12" fill="none" stroke="#818cf8" stroke-width="3"/><circle cx="26" cy="14" r="12" fill="none" stroke="#c4b5fd" stroke-width="3"/></svg>
+      <span class="nom titre">FaceàFace<span>2027</span></span>
+    </a>
+    <nav aria-label="Navigation principale">
+      <a href="index.html">Candidats</a>
+      <a href="mentions-legales.html#methode">Méthode</a>
+    </nav>
+  </div>
+</header>
+
+<div id="page"></div>
+
+<footer>
+  <div class="conteneur">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="mentions-legales.html#credits">Crédits photos</a>
+    <span>Site indépendant, sans affiliation à un parti ou à un candidat.</span>
+    <span>Dernière mise à jour : novembre 2026</span>
+  </div>
+</footer>
+
+<div class="barre" id="barre" role="status" aria-live="polite">
+  <div class="barre-contenu">
+    <div>
+      <div class="compte" id="compte">Thème : aucun</div>
+      <div class="noms" id="noms"></div>
+    </div>
+    <div class="boutons">
+      <button type="button" class="effacer" id="effacer">Effacer</button>
+      <button type="button" class="voir" disabled>Voir la comparaison</button>
+      <span class="message-bientot">La comparaison arrive bientôt</span>
+    </div>
+  </div>
+</div>
+
+<script src="donnees.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const a = CANDIDATS.find((c) => c.id === params.get('a'));
+const b = CANDIDATS.find((c) => c.id === params.get('b'));
+const page = document.getElementById('page');
+
+function pastille(c) {
+  return `<div class="pastille">
+    <img src="${c.photo}" alt="">
+    <div><div class="n">${echapper(c.nom)}</div><div class="p">${echapper(c.parti)}</div></div>
+  </div>`;
+}
+
+if (!a || !b || a === b) {
+  // Page ouverte sans deux candidats valides
+  page.innerHTML = `
+    <div class="erreur">
+      <h2 class="titre">Choisissez d’abord deux candidats</h2>
+      <p>Pour comparer des programmes, cochez deux candidats sur la page d’accueil.</p>
+      <a class="bouton" href="index.html">Choisir les candidats</a>
+    </div>`;
+  document.getElementById('barre').remove();
+} else {
+  document.title = 'Choisissez un thème : ' + a.nom + ' et ' + b.nom + ' — FaceàFace2027';
+  page.innerHTML = `
+    <section class="bandeau">
+      <div class="conteneur">
+        <div class="rappel">
+          <div class="duo">
+            <span class="surtitre">Vous comparez</span>
+            ${pastille(a)}
+            <span class="vs titre">VS</span>
+            ${pastille(b)}
+          </div>
+          <a class="changer" href="index.html?a=${a.id}&b=${b.id}">Changer de candidats</a>
+        </div>
+        <div>
+          <h1 class="titre">Choisissez un thème</h1>
+          <p class="intro">Cochez le thème sur lequel vous souhaitez comparer les deux programmes.</p>
+        </div>
+      </div>
+    </section>
+    <main>
+      <div class="conteneur">
+        <div class="grille" id="grille"></div>
+      </div>
+    </main>`;
+
+  const grille = document.getElementById('grille');
+  let choix = -1;
+
+  THEMES.forEach((t, i) => {
+    const carte = document.createElement('article');
+    carte.className = 'carte';
+    carte.innerHTML = `
+      <span class="icone" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${t.icone}"/></svg>
+      </span>
+      <span class="theme-titre titre">${echapper(t.titre)}</span>
+      <span class="theme-desc">${echapper(t.desc)}</span>
+      <div class="actions">
+        <label class="coche" for="theme-${i}">
+          <span>Choisir</span>
+          <input type="checkbox" id="theme-${i}" data-index="${i}">
+          <span class="infobulle">1 thème déjà sélectionné</span>
+        </label>
+      </div>`;
+    grille.appendChild(carte);
+  });
+
+  function miseAJour() {
+    grille.querySelectorAll('input[type=checkbox]').forEach((caseC) => {
+      const i = Number(caseC.dataset.index);
+      const choisi = i === choix;
+      const bloque = choix !== -1 && !choisi;
+      caseC.checked = choisi;
+      caseC.disabled = bloque;
+      caseC.closest('.coche').classList.toggle('grisee', bloque);
+      caseC.closest('.carte').classList.toggle('choisie', choisi);
+    });
+    const visible = choix !== -1;
+    document.getElementById('barre').classList.toggle('visible', visible);
+    document.body.classList.toggle('avec-barre', visible);
+    document.getElementById('compte').textContent = visible ? 'Thème : ' + THEMES[choix].titre : 'Thème : aucun';
+    document.getElementById('noms').textContent = a.nom + ' VS ' + b.nom;
+  }
+
+  grille.addEventListener('change', (e) => {
+    if (e.target.type !== 'checkbox') return;
+    const i = Number(e.target.dataset.index);
+    choix = e.target.checked ? i : -1;
+    miseAJour();
+  });
+  document.getElementById('effacer').addEventListener('click', () => { choix = -1; miseAJour(); });
+  miseAJour();
+}
+</script>
+</body>
+</html>
